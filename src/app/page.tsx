@@ -1,4 +1,3 @@
-"use client";
 import Footer from "@/components/custom/Footer";
 import { Hero } from "@/components/custom/Hero";
 import MetricsStatistics from "@/components/custom/Metric-statistics";
