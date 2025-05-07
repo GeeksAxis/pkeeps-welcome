@@ -1,3 +1,4 @@
+"use client";
 import Footer from "@/components/custom/Footer";
 import { Hero } from "@/components/custom/Hero";
 import MetricsStatistics from "@/components/custom/Metric-statistics";
@@ -7,40 +8,10 @@ import WhoPkeepsIsFor from "@/components/custom/who-is-pkeeps-for";
 import WhyItsImportant from "@/components/custom/why-its-important";
 import { CreditCard, Hand } from "lucide-react";
 
-// ✅ This metadata is automatically used by Next.js for SEO & social previews
-export const metadata = {
-  title: "Pkeeps - Secure Your Legacy",
-  description:
-    "Pkeeps lets you securely store and share sensitive digital assets, only when it matters most.",
-  openGraph: {
-    title: "Pkeeps - Secure Your Legacy",
-    description:
-      "Store and transfer digital assets with confidence. Share only when necessary.",
-    url: "https://pkeeps.com", // your production URL
-    siteName: "Pkeeps",
-    images: [
-      {
-        url: "https://pkeeps.com/og-image.jpg", // replace with your actual image
-        width: 1200,
-        height: 630,
-        alt: "Pkeeps - Secure Your Legacy",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Pkeeps - Secure Your Legacy",
-    description:
-      "Pkeeps securely stores and transfers your digital assets when you're gone.",
-    images: ["https://pkeeps.com/og-image.jpg"],
-  },
-};
-
 export default function Home() {
   return (
     <>
+      {/* <div className="relative  w-full overflow-hidden rounded-lg  bg-background"> */}
       <Hero
         content={{
           title: "Secure Your Legacy. Share It When It Matters Most.",
@@ -59,6 +30,7 @@ export default function Home() {
           },
         }}
       />
+      {/* </div> */}
       <WhoPkeepsIsFor />
       <WhyItsImportant />
       <MetricsStatistics />
