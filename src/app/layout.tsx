@@ -5,7 +5,7 @@ import { InnerLayout } from "./InnerLayout";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: "pkeeps ",
+  title: "Terms of Service - Pkeeps",
   description:
     "pkeeps is a platform that connects Provides estate planning and management services to individuals and families.",
 };
