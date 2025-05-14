@@ -104,24 +104,6 @@ export default function ContactPage() {
                 </p>
               </div>
             </div>
-
-            {/* <div className="flex items-start gap-4">
-              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <MapPin className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-foreground">Address</h3>
-                <p className="text-muted-foreground">
-                  Pkeeps, Inc.
-                  <br />
-                  123 Digital Avenue
-                  <br />
-                  Secure City, SC 12345
-                  <br />
-                  United States
-                </p>
-              </div>
-            </div> */}
           </div>
 
           <div className="bg-card border border-border rounded-lg p-6">
