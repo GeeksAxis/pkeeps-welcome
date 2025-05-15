@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import Footer from "@/components/custom/Footer";
 import { Hero } from "@/components/custom/Hero";
 import MetricsStatistics from "@/components/custom/Metric-statistics";
@@ -7,10 +7,10 @@ import SecuritySection from "@/components/custom/security-section";
 import WhoPkeepsIsFor from "@/components/custom/who-is-pkeeps-for";
 import WhyItsImportant from "@/components/custom/why-its-important";
 import { CreditCard, Hand } from "lucide-react";
-import type { Metadata } from 'next'
+import type { Metadata } from "next";
 
 // ✅ This metadata is automatically used by Next.js for SEO & social previews
-export const metadata:Metadata = {
+export const metadata: Metadata = {
   title: "Pkeeps - Secure Your Legacy",
   description:
     "Pkeeps lets you securely store and share sensitive digital assets, only when it matters most.",
