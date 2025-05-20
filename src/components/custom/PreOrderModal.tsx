@@ -12,6 +12,7 @@ import { supabase } from "@/lib/superbase";
 import { MoonLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import { getPublicEnv } from "@/config";
+// import { usePaystackPayment } from "react-paystack";
 
 interface PreOrderModalProps {
   isOpen: boolean;
@@ -29,10 +30,55 @@ export default function PreOrderModal({
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // const paystackConfig = {
+  //   reference: new Date().getTime().toString(),
+  //   email: email,
+  //   amount: 20000, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+  //   publicKey: "pk_test_b448c10aa89a7654b88480a95b1d787e9f3f61c3",
+  // };
+
+  // const initializePaystackPayment = usePaystackPayment(paystackConfig);
+  // const onSuccessPaystack = (reference: any) => {
+  //   // Implementation for whatever you want to do with reference and after success call.
+  //   console.log(reference);
+
+  //   closePaymentModal(); // this will close the modal programmatically
+  //   supabase
+  //     .from("pre_orders")
+  //     .insert([{ email, name }])
+  //     .then(({ error }) => {
+  //       if (error) {
+  //         console.log("Error inserting pre-order data:", error);
+  //         toast.error("Something went wrong. Please try again.");
+  //       }
+  //       // console.log("Pre-order data inserted:", data);
+  //       toast.success("Pre-order successful!");
+  //     });
+  //   setTimeout(() => {
+  //     onClose();
+  //     setEmail("");
+  //     setName("");
+  //     setAgreeToTerms(false);
+  //     setLoading(false);
+  //   }, 800);
+  // };
+  // const onClosePaystack = () => {
+  //   // implementation for  whatever you want to do when the Paystack dialog closed.
+  //   console.log("closed");
+  //   setTimeout(() => {
+  //     onClose();
+  //     setEmail("");
+  //     setName("");
+  //     toast.error("Payment cancelled.");
+  //     setAgreeToTerms(false);
+  //     setLoading(false);
+  //   }, 800);
+  // };
+
   const FlutterwaveConfig = {
     public_key: getPublicEnv().NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY,
     tx_ref: Date.now().toString(),
-    amount: 8,
+    amount: 200,
     currency: "NGN",
     payment_options: "card,mobilemoney,ussd",
     customer: {
@@ -49,29 +95,71 @@ export default function PreOrderModal({
 
   const handleFlutterPayment = useFlutterwave(FlutterwaveConfig);
 
+  const checkExistingPreOrder = async (email: string) => {
+    try {
+      const res = await fetch("/api/check-pre-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      return data.exists;
+    } catch (error) {
+      console.error("Error checking existing pre-order:", error);
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would handle the form submission
-    // console.log({ email, name, agreeToTerms, type });
+
     setLoading(true);
 
     if (type == "pre-order") {
-      console.log("starting payment");
+      const hasPreOrdered = await checkExistingPreOrder(email);
+
+      console.log("hasPreOrdered:", hasPreOrdered);
+
+      if (hasPreOrdered) {
+        toast.error("You have already pre-ordered!");
+        setTimeout(() => {
+          onClose();
+          setEmail("");
+          setName("");
+          setAgreeToTerms(false);
+          setLoading(false);
+        }, 800);
+        return;
+      }
+
       handleFlutterPayment({
-        callback: (response) => {
+        callback: async (response) => {
           console.log(response);
           closePaymentModal(); // this will close the modal programmatically
-          supabase
-            .from("pre_orders")
-            .insert([{ email, name }])
-            .then(({ error }) => {
-              if (error) {
-                console.log("Error inserting pre-order data:", error);
+          await fetch("/api/verify-payment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              name,
+              transaction_id: response.transaction_id,
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.error) {
                 toast.error("Something went wrong. Please try again.");
+              } else {
+                toast.success("Pre-order successful!");
               }
-              // console.log("Pre-order data inserted:", data);
-              toast.success("Pre-order successful!");
             });
+
           setTimeout(() => {
             onClose();
             setEmail("");
@@ -119,8 +207,6 @@ export default function PreOrderModal({
           }
         });
     }
-
-    // Reset form and close modal
   };
 
   if (!isOpen) return null;
