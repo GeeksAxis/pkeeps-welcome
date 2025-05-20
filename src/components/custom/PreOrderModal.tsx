@@ -105,7 +105,7 @@ export default function PreOrderModal({
         body: JSON.stringify({ email }),
       });
 
-      const data = await res.json();
+      const data = await res.json() as { exists: boolean };
 
       return data.exists;
     } catch (error) {
@@ -113,7 +113,6 @@ export default function PreOrderModal({
       return false;
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -151,7 +150,7 @@ export default function PreOrderModal({
               transaction_id: response.transaction_id,
             }),
           })
-            .then((res) => res.json())
+            .then((res) => res.json() as Promise<{ error?: Error }>)
             .then((data) => {
               if (data.error) {
                 toast.error("Something went wrong. Please try again.");
@@ -159,7 +158,6 @@ export default function PreOrderModal({
                 toast.success("Pre-order successful!");
               }
             });
-
           setTimeout(() => {
             onClose();
             setEmail("");

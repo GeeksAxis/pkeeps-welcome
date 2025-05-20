@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ exists: !!data });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error checking pre-order:", error);
     return NextResponse.json(
       { error: "Failed to check pre-order" },
